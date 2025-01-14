@@ -1,34 +1,76 @@
+
+
+
 substitutions:
-  name: esp32-easun-rs232
-  friendly_name: esp32-easun-rs232
+  name: "smgii"
+  friendly_name: SMGII
+#  name: esp32-easun-rs232
+#  friendly_name: esp32-easun-rs232
   device_description: "Monitor and control a ISolar/EASUN SMG II 11Kw inverter via RS232"
-  tx_pin: GPIO16
+  tx_pin: GPIO18
   rx_pin: GPIO17
 
 esphome:
   name: ${name}
   comment: ${device_description}
   project:
-    name: "robgt.esphome-smg-11Kw"
-    version: 1.1.1
+    name: "ogry.esphome-smg-11Kw"
+    version: 0.0.2
 
 esp32:
-  board: esp32dev
+  board: esp32-s3-devkitc-1
   framework:
     type: arduino
 
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "5DzbBSZ3TTYD3R+NdwCc5Tkvcktbe4/dQlNDvavKNdo="
+
+ota:
+  - platform: esphome
+    password: "4bb8d36a0d369baac296b9f6c5eb7578"
+
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+  networks:
+#wifi_ssid: "testeles.guifi.net"
+#wifi_ssid2: "testeles.guifi.net-EXT"
+#wifi_ssid3: "testeles5.guifi.net-pro-2.4G"
+#wifi_ssid4: "testeles5.guifi.net-pro-5G"
+#wifi_ssid5: "internet.testeles.net"
+#wifi_ssid6: "localdisp.testeles.net"
+
+    - ssid: !secret wifi_ssid
+      password: !secret wifi_password
+    - ssid: !secret wifi_ssid2
+      password: !secret wifi_password
+    - ssid: !secret wifi_ssid3
+      password: !secret wifi_password
+    - ssid: !secret wifi_ssid4
+      password: !secret wifi_password
+    - ssid: !secret wifi_ssid5
+      password: !secret wifi_password
+    - ssid: !secret wifi_ssid6
+      password: !secret wifi_password
+
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Smgiib Fallback Hotspot"
+    password: !secret wifi_password
 
 # mettere il proprio indirizzo ip 
+# En mi caso, fijo la IP desde el router con OpenWRT
 
-  manual_ip:
-    static_ip: 192.168.1.143
-    gateway: 192.168.1.1
-    subnet: 255.255.255.0
-    dns1: 192.168.1.1
-    dns2: 8.8.8.8
+  # manual_ip:
+  #   static_ip: 192.168.1.143
+  #   gateway: 192.168.1.1
+  #   subnet: 255.255.255.0
+  #   dns1: 192.168.1.1
+  #   dns2: 8.8.8.8
+
+captive_portal:
 
 web_server:
   port: 80
@@ -55,16 +97,6 @@ uart:
 #  password: !secret mqtt_password
 #  id: mqtt_client
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: "YgRhs72Ilmz8m6fjzYVvVffwmabzL/3op9YsKgKYd8k="
-
-ota:
-  - platform: esphome
-    password: "175d3c9fd8256b480532478e448cf7e4"
-
-#captive_portal:
 
 modbus:
   - id: modbus0
@@ -422,7 +454,7 @@ sensor:
   - platform: modbus_controller
     modbus_controller_id: smg0
     id: smg0_power_day
-    name: "${name} produzione day"
+    name: "${name} power day"
     address: 702
     register_type: holding
     value_type: S_WORD
@@ -432,6 +464,7 @@ sensor:
     accuracy_decimals: 1
     filters:
       - multiply: 10.0
+
 
 
 
@@ -537,6 +570,22 @@ select:
  #   optionsmap:
  #     "Timed off": 0
  #     "Always on": 1
+
+  # Battery type                                     Uint  630 1 R/W 
+  - platform: modbus_controller
+    modbus_controller_id: smg0
+    name: "${name} battery type"
+    use_write_multiple: true
+    address: 630
+    value_type: U_WORD
+    optionsmap:
+      "AGM": 0
+      "FLD": 1
+      "User": 2
+      "Li2": 4
+      "Li4": 6
+      "Lib": 8
+
 
   # Battery charging priority                                     Uint  331 1 R/W 0: Utility priority, 1: PV priority, 2: PV is at the same level as the Utility, 3: Only PV charging is allowed
   - platform: modbus_controller
@@ -922,6 +971,48 @@ number:
     lambda: "return x * 0.1f;"
     write_lambda: |-
       return x * 10.0f;
+
+
+  # Low DC battery SOC Protection                        1%       Int   647 1 R/W
+  - platform: modbus_controller
+    modbus_controller_id: smg0
+    name: "${name} Low DC SOC Protection"
+    use_write_multiple: true
+    address: 647
+    register_type: holding
+    value_type: S_WORD
+    min_value: 5
+    max_value: 50
+    step: 1
+    unit_of_measurement: "%"
+
+
+  # Low DC battery SOC Recovery                          1%       Int   648 1 R/W
+  - platform: modbus_controller
+    modbus_controller_id: smg0
+    name: "${name} Low DC SOC Recovery"
+    address: 648
+    register_type: holding
+    value_type: S_WORD
+    min_value: 60
+    max_value: 100
+    step: 1
+    unit_of_measurement: "%"
+
+
+  # Low DC battery SOC Cut-Off                          1%       Int   650 1 R/W
+  - platform: modbus_controller
+    modbus_controller_id: smg0
+    name: "${name} Low DC SOC Cut-Off"
+    address: 650
+    register_type: holding
+    value_type: S_WORD
+    min_value: 3
+    max_value: 30
+    step: 1
+    unit_of_measurement: "%"
+
+
 
   # Eq Charging voltage                                           0.1V    Uint  334 1 R/W
 #  - platform: modbus_controller
