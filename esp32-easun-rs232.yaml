@@ -852,8 +852,8 @@ number:
     address: 631
     register_type: holding
     value_type: U_WORD
-    min_value: 0.0
-    # max_value: 100.0
+    min_value: 53.0
+    max_value: 58.4
     step: 0.1
     unit_of_measurement: "V"
     lambda: "return x * 0.1f;"
@@ -868,8 +868,8 @@ number:
     address: 637
     register_type: holding
     value_type: U_WORD
-    min_value: 0.0
-    max_value: 100.0
+    min_value: 53.0
+    max_value: 58.4
     step: 0.1
     unit_of_measurement: "V"
     lambda: "return x * 0.1f;"
@@ -884,8 +884,8 @@ number:
     address: 638
     register_type: holding
     value_type: U_WORD
-    min_value: 0.0
-    # max_value: 100.0
+    min_value: 42.4
+    max_value: 58.4
     step: 0.1
     unit_of_measurement: "V"
     lambda: "return x * 0.1f;"
@@ -900,8 +900,8 @@ number:
     address: 646
     register_type: holding
     value_type: U_WORD
-    min_value: 0.0
-    # max_value: 100.0
+    min_value: 53.0
+    max_value: 58.4
     step: 0.1
     unit_of_measurement: "V"
     lambda: "return x * 0.1f;"
@@ -916,8 +916,8 @@ number:
     address: 644
     register_type: holding
     value_type: U_WORD
-    min_value: 0.0
-    # max_value: 100.0
+    min_value: 42.4
+    max_value: 58.4
     step: 0.1
     unit_of_measurement: "V"
     lambda: "return x * 0.1f;"
@@ -932,8 +932,8 @@ number:
     address: 643
     register_type: holding
     value_type: U_WORD
-    min_value: 0.0
-    # max_value: 100.0
+    min_value: 42.4
+    max_value: 58.4
     step: 0.1
     unit_of_measurement: "V"
     lambda: "return x * 0.1f;"
@@ -948,8 +948,8 @@ number:
     address: 640
     register_type: holding
     value_type: U_WORD
-    min_value: 0.0
-    max_value: 100.0
+    min_value: 10.0
+    max_value: 160.0
     step: 0.1
     unit_of_measurement: "A"
     lambda: "return x * 0.1f;"
@@ -964,8 +964,8 @@ number:
     address: 641
     register_type: holding
     value_type: U_WORD
-    min_value: 0.0
-    max_value: 100.0
+    min_value: 2.0
+    max_value: 120.0
     step: 0.1
     unit_of_measurement: "A"
     lambda: "return x * 0.1f;"
